@@ -1,6 +1,13 @@
 import streamlit as st
 import plotly.express as px
 
+# Cargar datos
+data = load_data()
+con = connect_to_duckdb(data)
+
+# Título de la página
+st.title("📈 Diagnóstico Completo 2023-T3")
+
 def page_analisis_fijo(con):
     st.header("Análisis Fijo y Avanzado (2023, Trimestre 3, Antioquia)")
 
