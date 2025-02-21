@@ -9,10 +9,10 @@ def page_filtros_visualizaciones(con):
     try:
         internet_fijo = pd.read_csv("Internet_Fijo_Penetraci_n_Departamentos_20250206.csv", encoding='latin1')
         
-        # Renombrar columnas para evitar problemas de codificación
+        # Renombrar columnas para corregir problemas de codificación
         internet_fijo = internet_fijo.rename(columns={
-            'AÃ‘O': 'AÑO',
-            'POBLACIÃ“N DANE': 'POBLACION_DANE',
+            'AÃO': 'AÑO',  # Corregir "AÃO" a "AÑO"
+            'POBLACIÃN DANE': 'POBLACION_DANE',  # Corregir "POBLACIÃN DANE" a "POBLACION_DANE"
             'No. ACCESOS FIJOS A INTERNET': 'ACCESOS_FIJOS_INTERNET',
             'INDICE': 'INDICE'
         })
