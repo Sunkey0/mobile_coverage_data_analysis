@@ -56,7 +56,7 @@ def main():
             - **Mapa Coroplético de Calidad**: Muestra la calidad de la conectividad en un mapa.
 
             ### Fuente de Datos
-            Los datos utilizados en este dashboard provienen del archivo CSV subido.
+            Los datos utilizados en este dashboard provienen de Datos Abiertos de Colombia.
         """)
 
         # Resumen Ejecutivo
