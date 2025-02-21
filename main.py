@@ -2,11 +2,11 @@ import streamlit as st
 from setup import setup_app
 from data_loader import load_data
 from filters import connect_to_duckdb
-from pages.filtros_visualizaciones import page_filtros_visualizaciones
-from pages.analisis_fijo import page_analisis_fijo
-from pages.mapa_coropletico import page_mapa_coropletico
-from pages.calidad_conectividad import page_calidad_conectividad
-from pages.mapa_calidad_conectividad import page_mapa_calidad_conectividad
+from filtros_visualizaciones import page_filtros_visualizaciones
+from analisis_fijo import page_analisis_fijo
+from mapa_coropletico import page_mapa_coropletico
+from calidad_conectividad import page_calidad_conectividad
+from mapa_calidad_conectividad import page_mapa_calidad_conectividad
 
 def main():
     # Configuración inicial
