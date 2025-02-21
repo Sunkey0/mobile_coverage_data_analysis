@@ -1,8 +1,6 @@
 # mobile_coverage_data_analysis
 ##Mobile Coverage Data Analysis
 
-Mobile Coverage Data Analysis
-
 Project Overview
 This project is the final assignment for the Talento Tech Data Analysis Bootcamp, focusing on the analysis of mobile coverage data in Antioquia for Q3 of 2023. It leverages various data analysis and visualization techniques to interpret and present insights effectively.
 
