@@ -8,6 +8,15 @@ def page_filtros_visualizaciones(con):
     # Cargar datos de penetración de internet fijo
     try:
         internet_fijo = pd.read_csv("Internet_Fijo_Penetraci_n_Departamentos_20250206.csv", encoding='latin1')
+        
+        # Renombrar columnas para evitar problemas de codificación
+        internet_fijo = internet_fijo.rename(columns={
+            'AÃ‘O': 'AÑO',
+            'POBLACIÃ“N DANE': 'POBLACION_DANE',
+            'No. ACCESOS FIJOS A INTERNET': 'ACCESOS_FIJOS_INTERNET',
+            'INDICE': 'INDICE'
+        })
+        
         # Limpiar y formatear los datos
         internet_fijo['INDICE'] = internet_fijo['INDICE'].str.replace(',', '.').astype(float)
     except Exception as e:
@@ -112,8 +121,8 @@ def page_filtros_visualizaciones(con):
 
     # Calcular KPIs
     if not internet_fijo_filtrado.empty:
-        total_accesos = internet_fijo_filtrado['No. ACCESOS FIJOS A INTERNET'].sum()
-        total_poblacion = internet_fijo_filtrado['POBLACIÓN DANE'].sum()
+        total_accesos = internet_fijo_filtrado['ACCESOS_FIJOS_INTERNET'].sum()
+        total_poblacion = internet_fijo_filtrado['POBLACION_DANE'].sum()
         indice_promedio = internet_fijo_filtrado['INDICE'].mean()
 
         # Mostrar KPIs
