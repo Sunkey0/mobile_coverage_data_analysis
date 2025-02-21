@@ -1,5 +1,7 @@
 import streamlit as st
 import plotly.express as px
+from data_loader import load_data  # Importar la función load_data
+from filters import connect_to_duckdb
 
 # Cargar datos
 data = load_data()
