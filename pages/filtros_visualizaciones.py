@@ -1,6 +1,6 @@
 import streamlit as st
 from filters import apply_filters
-from visualizations import plot_cobertura
+from visualizations import plot_cobertura  # Importar la función
 
 def page_filtros_visualizaciones(con):
     st.header("Filtros y Visualizaciones")
@@ -35,37 +35,3 @@ def page_filtros_visualizaciones(con):
 
         cobertura_departamento = data_filtrada[data_filtrada[tecnologia_seleccionada] == 'S'].groupby('DEPARTAMENTO').size().reset_index(name='Conteo')
         plot_cobertura(cobertura_departamento, 'DEPARTAMENTO', 'Conteo', f"Conteo de Cobertura {tecnologia_seleccionada} por Departamento", px.colors.sequential.Plasma)
-
-        if departamento_seleccionado:
-            departamentos_str = ", ".join([f"'{d}'" for d in departamento_seleccionado])
-            query_avance = f"""
-                SELECT AÑO, 
-                    COUNT(CASE WHEN COBERTURA_2G = 'S' THEN 1 END) AS COBERTURA_2G,
-                    COUNT(CASE WHEN COBERTURA_3G = 'S' THEN 1 END) AS COBERTURA_3G,
-                    COUNT(CASE WHEN "COBERTURA_HSPA+" = 'S' THEN 1 END) AS COBERTURA_HSPA,
-                    COUNT(CASE WHEN COBERTURA_4G = 'S' THEN 1 END) AS COBERTURA_4G,
-                    COUNT(CASE WHEN COBERTURA_LTE = 'S' THEN 1 END) AS COBERTURA_LTE,
-                    COUNT(CASE WHEN COBERTURA_5G = 'S' THEN 1 END) AS COBERTURA_5G
-                FROM data
-                WHERE DEPARTAMENTO IN ({departamentos_str})
-                GROUP BY AÑO
-                ORDER BY AÑO
-            """
-            avance_cobertura = con.execute(query_avance).fetchdf()
-
-            if not avance_cobertura.empty:
-                fig_avance = px.line(
-                    avance_cobertura,
-                    x='AÑO',
-                    y=['COBERTURA_2G', 'COBERTURA_3G', 'COBERTURA_HSPA', 'COBERTURA_4G', 'COBERTURA_LTE', 'COBERTURA_5G'],
-                    title="Evolución de la Cobertura por Tecnología (Todos los Años)",
-                    labels={'value': 'Número de Centros Poblados con Cobertura', 'variable': 'Tecnología'},
-                    color_discrete_sequence=px.colors.sequential.Plasma
-                )
-                st.plotly_chart(fig_avance, use_container_width=True)
-            else:
-                st.warning("No hay datos de avance de cobertura para los departamentos seleccionados.")
-        else:
-            st.warning("Selecciona al menos un departamento para ver el avance de cobertura por año.")
-    else:
-        st.warning("No hay datos disponibles para los filtros seleccionados.")
