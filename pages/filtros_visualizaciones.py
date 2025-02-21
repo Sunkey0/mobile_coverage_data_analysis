@@ -1,37 +1,44 @@
 import streamlit as st
 from filters import apply_filters
-from visualizations import plot_cobertura  # Importar la función
+from visualizations import plot_cobertura
+from data_loader import load_data
+from filters import connect_to_duckdb
 
-def page_filtros_visualizaciones(con):
-    st.header("Filtros y Visualizaciones")
+# Cargar datos
+data = load_data()
+con = connect_to_duckdb(data)
 
-    col1, col2, col3 = st.columns(3)
+# Título de la página
+st.title("📊 Filtros y Visualizaciones")
 
-    with col1:
-        años = con.execute("SELECT DISTINCT AÑO FROM data ORDER BY AÑO").fetchdf()['AÑO'].tolist()
-        año_seleccionado = st.selectbox("Selecciona el año:", años)
+# Código de la página
+col1, col2, col3 = st.columns(3)
 
-    with col2:
-        trimestres = con.execute("SELECT DISTINCT TRIMESTRE FROM data WHERE AÑO = ? ORDER BY TRIMESTRE", [año_seleccionado]).fetchdf()['TRIMESTRE'].tolist()
-        trimestre_seleccionado = st.selectbox("Selecciona el trimestre:", trimestres)
+with col1:
+    años = con.execute("SELECT DISTINCT AÑO FROM data ORDER BY AÑO").fetchdf()['AÑO'].tolist()
+    año_seleccionado = st.selectbox("Selecciona el año:", años)
 
-    with col3:
-        departamentos = con.execute("SELECT DISTINCT DEPARTAMENTO FROM data WHERE AÑO = ? AND TRIMESTRE = ? ORDER BY DEPARTAMENTO", [año_seleccionado, trimestre_seleccionado]).fetchdf()['DEPARTAMENTO'].tolist()
-        departamento_seleccionado = st.multiselect("Selecciona los departamentos:", departamentos)
+with col2:
+    trimestres = con.execute("SELECT DISTINCT TRIMESTRE FROM data WHERE AÑO = ? ORDER BY TRIMESTRE", [año_seleccionado]).fetchdf()['TRIMESTRE'].tolist()
+    trimestre_seleccionado = st.selectbox("Selecciona el trimestre:", trimestres)
 
-    tecnologias = ['COBERTURA_2G', 'COBERTURA_3G', 'COBERTURA_HSPA+', 'COBERTURA_4G', 'COBERTURA_LTE', 'COBERTURA_5G']
-    tecnologia_seleccionada = st.selectbox("Selecciona la tecnología:", tecnologias)
+with col3:
+    departamentos = con.execute("SELECT DISTINCT DEPARTAMENTO FROM data WHERE AÑO = ? AND TRIMESTRE = ? ORDER BY DEPARTAMENTO", [año_seleccionado, trimestre_seleccionado]).fetchdf()['DEPARTAMENTO'].tolist()
+    departamento_seleccionado = st.multiselect("Selecciona los departamentos:", departamentos)
 
-    data_filtrada = apply_filters(con, año_seleccionado, trimestre_seleccionado, departamento_seleccionado)
+tecnologias = ['COBERTURA_2G', 'COBERTURA_3G', 'COBERTURA_HSPA+', 'COBERTURA_4G', 'COBERTURA_LTE', 'COBERTURA_5G']
+tecnologia_seleccionada = st.selectbox("Selecciona la tecnología:", tecnologias)
 
-    st.write("### Datos Filtrados")
-    st.dataframe(data_filtrada)
+data_filtrada = apply_filters(con, año_seleccionado, trimestre_seleccionado, departamento_seleccionado)
 
-    if not data_filtrada.empty:
-        st.subheader(f"Visualizaciones de Cobertura de {tecnologia_seleccionada}")
+st.write("### Datos Filtrados")
+st.dataframe(data_filtrada)
 
-        cobertura_municipio = data_filtrada[data_filtrada[tecnologia_seleccionada] == 'S'].groupby('MUNICIPIO').size().reset_index(name='Conteo')
-        plot_cobertura(cobertura_municipio, 'MUNICIPIO', 'Conteo', f"Conteo de Cobertura {tecnologia_seleccionada} por Municipio", px.colors.sequential.Viridis)
+if not data_filtrada.empty:
+    st.subheader(f"Visualizaciones de Cobertura de {tecnologia_seleccionada}")
 
-        cobertura_departamento = data_filtrada[data_filtrada[tecnologia_seleccionada] == 'S'].groupby('DEPARTAMENTO').size().reset_index(name='Conteo')
-        plot_cobertura(cobertura_departamento, 'DEPARTAMENTO', 'Conteo', f"Conteo de Cobertura {tecnologia_seleccionada} por Departamento", px.colors.sequential.Plasma)
+    cobertura_municipio = data_filtrada[data_filtrada[tecnologia_seleccionada] == 'S'].groupby('MUNICIPIO').size().reset_index(name='Conteo')
+    plot_cobertura(cobertura_municipio, 'MUNICIPIO', 'Conteo', f"Conteo de Cobertura {tecnologia_seleccionada} por Municipio", px.colors.sequential.Viridis)
+
+    cobertura_departamento = data_filtrada[data_filtrada[tecnologia_seleccionada] == 'S'].groupby('DEPARTAMENTO').size().reset_index(name='Conteo')
+    plot_cobertura(cobertura_departamento, 'DEPARTAMENTO', 'Conteo', f"Conteo de Cobertura {tecnologia_seleccionada} por Departamento", px.colors.sequential.Plasma)
