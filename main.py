@@ -22,8 +22,7 @@ def cargar_datos(uploaded_file):
     Carga los datos desde el archivo subido y los almacena en caché.
     """
     data = load_data(uploaded_file)
-    con = connect_to_duckdb(data)
-    return data, con
+    return data
 
 # Título de la página de inicio
 st.title("📊 Hacia una Antioquia Conectada")
@@ -33,7 +32,11 @@ uploaded_file = st.sidebar.file_uploader("⬆️ Sube tu archivo CSV", type=["cs
 
 # Cargar datos si se ha subido un archivo
 if uploaded_file is not None:
-    data, con = cargar_datos(uploaded_file)
+    # Cargar datos (almacenados en caché)
+    data = cargar_datos(uploaded_file)
+    
+    # Crear la conexión a DuckDB (no almacenada en caché)
+    con = connect_to_duckdb(data)
 
     # Resumen del dashboard
     st.markdown("""
