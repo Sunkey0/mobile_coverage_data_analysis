@@ -105,35 +105,53 @@ def page_filtros_visualizaciones(con):
 
     # KPIs de Penetración de Internet Fijo
     st.subheader("📈 KPIs de Penetración de Internet Fijo")
-
+    
+    # Mostrar las columnas disponibles para verificación
+    st.write("Columnas disponibles en los datos de penetración de internet fijo:")
     st.write(internet_fijo.columns.tolist())
-
+    
+    # Renombrar columnas para evitar problemas de codificación
     internet_fijo = internet_fijo.rename(columns={
-    'AÃ‘O': 'AÑO',
-    'POBLACIÃ“N DANE': 'POBLACION_DANE',
-    'No. ACCESOS FIJOS A INTERNET': 'ACCESOS_FIJOS_INTERNET',
-    'INDICE': 'INDICE'
+        'AÃ‘O': 'AÑO',
+        'POBLACIÃ“N DANE': 'POBLACION_DANE',
+        'No. ACCESOS FIJOS A INTERNET': 'ACCESOS_FIJOS_INTERNET',
+        'INDICE': 'INDICE'
     })
     
+    # Filtros específicos para la base de datos de penetración de internet fijo
+    st.markdown("### Filtros para Penetración de Internet Fijo")
+    
+    # Seleccionar año
+    años_disponibles = internet_fijo['AÑO'].unique().tolist()
+    año_seleccionado_fijo = st.selectbox("Selecciona el año para penetración de internet fijo:", años_disponibles)
+    
+    # Seleccionar trimestre
+    trimestres_disponibles = internet_fijo[internet_fijo['AÑO'] == año_seleccionado_fijo]['TRIMESTRE'].unique().tolist()
+    trimestre_seleccionado_fijo = st.selectbox("Selecciona el trimestre para penetración de internet fijo:", trimestres_disponibles)
+    
+    # Seleccionar departamentos
+    departamentos_disponibles = internet_fijo['DEPARTAMENTO'].unique().tolist()
+    departamento_seleccionado_fijo = st.multiselect("Selecciona los departamentos para penetración de internet fijo:", departamentos_disponibles)
+    
     # Filtrar los datos de penetración de internet fijo
-    if departamento_seleccionado:
+    if departamento_seleccionado_fijo:
         internet_fijo_filtrado = internet_fijo[
-            (internet_fijo['AÑO'] == año_seleccionado) &
-            (internet_fijo['TRIMESTRE'] == trimestre_seleccionado) &
-            (internet_fijo['DEPARTAMENTO'].isin(departamento_seleccionado))
+            (internet_fijo['AÑO'] == año_seleccionado_fijo) &
+            (internet_fijo['TRIMESTRE'] == trimestre_seleccionado_fijo) &
+            (internet_fijo['DEPARTAMENTO'].isin(departamento_seleccionado_fijo))
         ]
     else:
         internet_fijo_filtrado = internet_fijo[
-            (internet_fijo['AÑO'] == año_seleccionado) &
-            (internet_fijo['TRIMESTRE'] == trimestre_seleccionado)
+            (internet_fijo['AÑO'] == año_seleccionado_fijo) &
+            (internet_fijo['TRIMESTRE'] == trimestre_seleccionado_fijo)
         ]
-
+    
     # Calcular KPIs
     if not internet_fijo_filtrado.empty:
         total_accesos = internet_fijo_filtrado['ACCESOS_FIJOS_INTERNET'].sum()
         total_poblacion = internet_fijo_filtrado['POBLACION_DANE'].sum()
         indice_promedio = internet_fijo_filtrado['INDICE'].mean()
-
+    
         # Mostrar KPIs
         col1, col2, col3 = st.columns(3)
         with col1:
@@ -142,5 +160,5 @@ def page_filtros_visualizaciones(con):
             st.metric("Población Total Cubierta", f"{total_poblacion:,}")
         with col3:
             st.metric("Índice Promedio de Penetración", f"{indice_promedio:.2f}%")
-    else:
-        st.warning("No hay datos de penetración de internet fijo para los filtros seleccionados.")
+else:
+    st.warning("No hay datos de penetración de internet fijo para los filtros seleccionados.")
