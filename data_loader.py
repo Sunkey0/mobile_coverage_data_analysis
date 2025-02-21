@@ -1,10 +1,12 @@
 import pandas as pd
 import streamlit as st
 
-def load_data(uploaded_file):
+def load_data():
     """
     Carga los datos desde un archivo CSV subido por el usuario.
     """
+    uploaded_file = st.sidebar.file_uploader("⬆️ Sube tu archivo CSV", type=["csv"])
+    
     if uploaded_file is not None:
         try:
             # Leer el archivo CSV
@@ -20,7 +22,7 @@ def load_data(uploaded_file):
             return data
         except Exception as e:
             st.error(f"Error al cargar los datos: {e}")
-            st.stop()
+            return None
     else:
         st.warning("Por favor, sube un archivo CSV para continuar.")
-        st.stop()
+        return None
