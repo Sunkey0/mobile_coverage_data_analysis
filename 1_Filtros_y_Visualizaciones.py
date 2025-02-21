@@ -1,6 +1,29 @@
 import streamlit as st
 import plotly.express as px
-from filters import apply_filters  # Asegúrate de que esta función esté definida
+import duckdb
+
+def connect_to_duckdb(data):
+    """
+    Conecta a una base de datos DuckDB en memoria y registra el DataFrame como una tabla.
+    """
+    con = duckdb.connect(database=':memory:')
+    con.register('data', data)
+    return con
+
+def apply_filters(con, año_seleccionado, trimestre_seleccionado, departamento_seleccionado):
+    """
+    Aplica filtros a los datos y devuelve un DataFrame filtrado.
+    """
+    query = """
+        SELECT * FROM data
+        WHERE AÑO = ? AND TRIMESTRE = ?
+    """
+    params = [año_seleccionado, trimestre_seleccionado]
+
+    if departamento_seleccionado:
+        query += " AND DEPARTAMENTO IN ({})".format(", ".join(["'{}'".format(d) for d in departamento_seleccionado]))
+
+    return con.execute(query, params).fetchdf()
 
 def page_filtros_visualizaciones(con):
     """
@@ -44,17 +67,12 @@ def page_filtros_visualizaciones(con):
     st.write("### Datos Filtrados")
     st.dataframe(data_filtrada)
 
-    st.write("Años disponibles:", años)
-    st.write("Año seleccionado:", año_seleccionado)
-
     # Visualizaciones de cobertura
     if not data_filtrada.empty:
         st.subheader(f"Visualizaciones de Cobertura de {tecnologia_seleccionada}")
 
         # Conteo de cobertura por municipio
         cobertura_municipio = data_filtrada[data_filtrada[tecnologia_seleccionada] == 'S'].groupby('MUNICIPIO').size().reset_index(name='Conteo')
-        
-        # Gráfico de cobertura por municipio
         if not cobertura_municipio.empty:
             fig_municipio = px.bar(
                 cobertura_municipio,
@@ -62,7 +80,8 @@ def page_filtros_visualizaciones(con):
                 y='Conteo',
                 title=f"Conteo de Cobertura {tecnologia_seleccionada} por Municipio",
                 labels={'Conteo': 'Número de Centros Poblados con Cobertura', 'MUNICIPIO': 'Municipio'},
-                color_discrete_sequence=px.colors.sequential.Viridis
+                color='Conteo',
+                color_continuous_scale=px.colors.sequential.Viridis
             )
             st.plotly_chart(fig_municipio, use_container_width=True)
         else:
@@ -70,8 +89,6 @@ def page_filtros_visualizaciones(con):
 
         # Conteo de cobertura por departamento
         cobertura_departamento = data_filtrada[data_filtrada[tecnologia_seleccionada] == 'S'].groupby('DEPARTAMENTO').size().reset_index(name='Conteo')
-        
-        # Gráfico de cobertura por departamento
         if not cobertura_departamento.empty:
             fig_departamento = px.bar(
                 cobertura_departamento,
@@ -79,7 +96,8 @@ def page_filtros_visualizaciones(con):
                 y='Conteo',
                 title=f"Conteo de Cobertura {tecnologia_seleccionada} por Departamento",
                 labels={'Conteo': 'Número de Centros Poblados con Cobertura', 'DEPARTAMENTO': 'Departamento'},
-                color_discrete_sequence=px.colors.sequential.Plasma
+                color='Conteo',
+                color_continuous_scale=px.colors.sequential.Plasma
             )
             st.plotly_chart(fig_departamento, use_container_width=True)
         else:
