@@ -193,7 +193,7 @@ def page_analisis_fijo(con):
     else:
         st.warning("No hay datos disponibles para la evolución temporal.")
 
-    st.subheader("⚠️ Brechas de Cobertura por Tecnología ({tecnologia_seleccionada_fijo}) (2023, Trimestre 3)")
+    st.subheader("⚠️ Brechas de Cobertura por Tecnología (2023, Trimestre 3)")
     with st.expander("Configuración de Análisis de Brechas"):
         tecnologia_brechas = st.selectbox(
             "Selecciona la tecnología para analizar brechas:",
@@ -244,7 +244,7 @@ def page_analisis_fijo(con):
 
     with col2:
         if not datos_centros_sin_cobertura.empty:
-            st.markdown("#### Centros Poblados sin Cobertura {tecnologia_seleccionada_fijo} en Zonas Vulnerables")
+            st.markdown("#### Centros Poblados sin Cobertura {tecnologia_brechas} en Zonas Vulnerables")
             st.dataframe(datos_centros_sin_cobertura)
         else:
             st.info("✅ Todos los centros poblados tienen {tecnologia_seleccionada_fijo} en áreas vulnerables")
