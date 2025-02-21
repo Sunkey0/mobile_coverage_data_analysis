@@ -10,10 +10,24 @@ from pages.mapa_calidad_conectividad import page_mapa_calidad_conectividad
 
 def main():
     # Configuración inicial
-    setup_app()
+    st.set_page_config(
+        page_title="Hacia una Antioquia Conectada",
+        page_icon="📊",
+        layout="wide",
+        initial_sidebar_state="expanded"  # Asegura que la barra lateral esté expandida
+    )
+
+    # Título de la aplicación
+    st.title("📊 Hacia una Antioquia Conectada")
 
     # Cargar datos
     data = load_data()
+    
+    # Verificar si se cargaron los datos
+    if data is None:
+        st.stop()  # Detener la ejecución si no se subió un archivo
+
+    # Conectar a DuckDB
     con = connect_to_duckdb(data)
 
     # Menú lateral
@@ -42,7 +56,7 @@ def main():
             - **Mapa Coroplético de Calidad**: Muestra la calidad de la conectividad en un mapa.
 
             ### Fuente de Datos
-            Los datos utilizados en este dashboard provienen de [nombre de la fuente].
+            Los datos utilizados en este dashboard provienen del archivo CSV subido.
         """)
     elif opcion == "Filtros y Visualizaciones":
         page_filtros_visualizaciones(con)
