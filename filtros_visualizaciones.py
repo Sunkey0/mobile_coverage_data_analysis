@@ -106,18 +106,6 @@ def page_filtros_visualizaciones(con):
     # KPIs de Penetración de Internet Fijo
     st.subheader("📈 KPIs de Penetración de Internet Fijo")
     
-    # Mostrar las columnas disponibles para verificación
-    st.write("Columnas disponibles en los datos de penetración de internet fijo:")
-    st.write(internet_fijo.columns.tolist())
-    
-    # Renombrar columnas para evitar problemas de codificación
-    internet_fijo = internet_fijo.rename(columns={
-        'AÃ‘O': 'AÑO',
-        'POBLACIÃ“N DANE': 'POBLACION_DANE',
-        'No. ACCESOS FIJOS A INTERNET': 'ACCESOS_FIJOS_INTERNET',
-        'INDICE': 'INDICE'
-    })
-    
     # Filtros específicos para la base de datos de penetración de internet fijo
     st.markdown("### Filtros para Penetración de Internet Fijo")
     
@@ -160,5 +148,5 @@ def page_filtros_visualizaciones(con):
             st.metric("Población Total Cubierta", f"{total_poblacion:,}")
         with col3:
             st.metric("Índice Promedio de Penetración", f"{indice_promedio:.2f}%")
-else:
-    st.warning("No hay datos de penetración de internet fijo para los filtros seleccionados.")
+    else:
+        st.warning("No hay datos de penetración de internet fijo para los filtros seleccionados.")
