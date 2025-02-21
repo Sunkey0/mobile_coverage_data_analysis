@@ -11,14 +11,14 @@ from mapa_calidad_conectividad import page_mapa_calidad_conectividad
 def main():
     # Configuración inicial
     st.set_page_config(
-        page_title="Hacia una Antioquia Conectada: Diagnóstico de la cobertura móvil Urbana-Rural de Antioquia en el trimestre 3 del año 2023",
+        page_title="Hacia una Antioquia Conectada",
         page_icon="📊",
         layout="wide",
         initial_sidebar_state="expanded"  # Asegura que la barra lateral esté expandida
     )
 
     # Título de la aplicación
-    st.title("📊 Hacia una Antioquia Conectada")
+    st.title("📊 Hacia una Antioquia Conectada: Diagnóstico de la cobertura móvil Urbana-Rural de Antioquia en el trimestre 3 del año 2023")
 
     # Cargar datos
     try:
