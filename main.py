@@ -75,7 +75,7 @@ def main():
 
             Además, el proyecto dará lugar a un informe detallado con hallazgos clave y recomendaciones estratégicas para mejorar la infraestructura digital en el departamento. Con estos resultados, se pretende contribuir al desarrollo de iniciativas de alfabetización digital e inclusión tecnológica en comunidades con menor acceso, impulsando así una Antioquia más conectada, equitativa y competitiva en un entorno cada vez más digitalizado.
         """)
-    elif opcion == "Filtros y Visualizaciones":
+    elif opcion == "Filtros globales de la Base de datos":
         page_filtros_visualizaciones(con)
     elif opcion == "Diagnóstico Completo 2023-T3":
         page_analisis_fijo(con)
