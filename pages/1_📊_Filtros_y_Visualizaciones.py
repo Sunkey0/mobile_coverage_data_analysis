@@ -1,10 +1,9 @@
 import streamlit as st
 from filters import apply_filters
-from visualizations import plot_cobertura
-import plotly.express as px
+from visualizations import plot_cobertura  # Importar la función
 
-def page_filtros_visualizaciones(data, con):
-    st.title("📊 Filtros y Visualizaciones")
+def page_filtros_visualizaciones(con):
+    st.header("Filtros y Visualizaciones")
 
     col1, col2, col3 = st.columns(3)
 
