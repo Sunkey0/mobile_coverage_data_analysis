@@ -1,7 +1,6 @@
 import streamlit as st
 import plotly.express as px
-from filters import apply_filters
-from visualizations import plot_cobertura
+from filters import apply_filters  # Asegúrate de que esta función esté definida
 
 def page_filtros_visualizaciones(con):
     """
@@ -51,22 +50,37 @@ def page_filtros_visualizaciones(con):
 
         # Conteo de cobertura por municipio
         cobertura_municipio = data_filtrada[data_filtrada[tecnologia_seleccionada] == 'S'].groupby('MUNICIPIO').size().reset_index(name='Conteo')
-        plot_cobertura(
-            cobertura_municipio, 
-            'MUNICIPIO', 
-            'Conteo', 
-            f"Conteo de Cobertura {tecnologia_seleccionada} por Municipio", 
-            px.colors.sequential.Viridis
-        )
+        
+        # Gráfico de cobertura por municipio
+        if not cobertura_municipio.empty:
+            fig_municipio = px.bar(
+                cobertura_municipio,
+                x='MUNICIPIO',
+                y='Conteo',
+                title=f"Conteo de Cobertura {tecnologia_seleccionada} por Municipio",
+                labels={'Conteo': 'Número de Centros Poblados con Cobertura', 'MUNICIPIO': 'Municipio'},
+                color_discrete_sequence=px.colors.sequential.Viridis
+            )
+            st.plotly_chart(fig_municipio, use_container_width=True)
+        else:
+            st.warning("No hay datos de cobertura por municipio para los filtros seleccionados.")
 
         # Conteo de cobertura por departamento
         cobertura_departamento = data_filtrada[data_filtrada[tecnologia_seleccionada] == 'S'].groupby('DEPARTAMENTO').size().reset_index(name='Conteo')
-        plot_cobertura(
-            cobertura_departamento, 
-            'DEPARTAMENTO', 
-            'Conteo', 
-            f"Conteo de Cobertura {tecnologia_seleccionada} por Departamento", 
-            px.colors.sequential.Plasma
-        )
+        
+        # Gráfico de cobertura por departamento
+        if not cobertura_departamento.empty:
+            fig_departamento = px.bar(
+                cobertura_departamento,
+                x='DEPARTAMENTO',
+                y='Conteo',
+                title=f"Conteo de Cobertura {tecnologia_seleccionada} por Departamento",
+                labels={'Conteo': 'Número de Centros Poblados con Cobertura', 'DEPARTAMENTO': 'Departamento'},
+                color_discrete_sequence=px.colors.sequential.Plasma
+            )
+            st.plotly_chart(fig_departamento, use_container_width=True)
+        else:
+            st.warning("No hay datos de cobertura por departamento para los filtros seleccionados.")
+
     else:
         st.warning("No hay datos disponibles para los filtros seleccionados.")
