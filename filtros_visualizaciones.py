@@ -1,4 +1,3 @@
-# filtros_visualizaciones.py
 import streamlit as st
 import plotly.express as px
 
@@ -34,12 +33,20 @@ def page_filtros_visualizaciones(con):
     tecnologia_seleccionada = st.selectbox("Selecciona la tecnología:", tecnologias)
 
     # Aplicar filtros
-    data_filtrada = con.execute(
-        "SELECT * FROM data WHERE AÑO = ? AND TRIMESTRE = ? AND DEPARTAMENTO IN ({})".format(
+    if departamento_seleccionado:
+        query = "SELECT * FROM data WHERE AÑO = ? AND TRIMESTRE = ? AND DEPARTAMENTO IN ({})".format(
             ", ".join(["'{}'".format(d) for d in departamento_seleccionado])
-        ),
-        [año_seleccionado, trimestre_seleccionado]
-    ).fetchdf()
+        )
+        params = [año_seleccionado, trimestre_seleccionado]
+    else:
+        query = "SELECT * FROM data WHERE AÑO = ? AND TRIMESTRE = ?"
+        params = [año_seleccionado, trimestre_seleccionado]
+
+    try:
+        data_filtrada = con.execute(query, params).fetchdf()
+    except Exception as e:
+        st.error(f"Error al ejecutar la consulta SQL: {e}")
+        return
 
     # Mostrar datos filtrados
     st.write("### Datos Filtrados")
