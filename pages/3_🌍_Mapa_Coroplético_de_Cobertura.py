@@ -1,16 +1,9 @@
+import streamlit as st
 import folium
 from streamlit_folium import folium_static
 import json
 import pandas as pd
 import duckdb
-import streamlit as st
-from data_loader import load_data
-from filters import connect_to_duckdb
-from pages.mapa_coropletico import page_mapa_coropletico
-
-# Cargar datos
-data = load_data()
-con = connect_to_duckdb(data)
 
 def page_mapa_coropletico(con):
     st.header("🌍 Mapa Coroplético de Cobertura por Municipio")
