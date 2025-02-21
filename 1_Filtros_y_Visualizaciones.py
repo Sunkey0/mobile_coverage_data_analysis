@@ -44,6 +44,9 @@ def page_filtros_visualizaciones(con):
     st.write("### Datos Filtrados")
     st.dataframe(data_filtrada)
 
+    st.write("Años disponibles:", años)
+    st.write("Año seleccionado:", año_seleccionado)
+
     # Visualizaciones de cobertura
     if not data_filtrada.empty:
         st.subheader(f"Visualizaciones de Cobertura de {tecnologia_seleccionada}")
