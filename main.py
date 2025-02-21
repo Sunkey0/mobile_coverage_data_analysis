@@ -30,17 +30,22 @@ def main():
     # Conectar a DuckDB
     con = connect_to_duckdb(data)
 
-    # Menú lateral
-    st.sidebar.title("Menú")
-    opcion = st.sidebar.radio(
-        "Selecciona una sección:",
-        ["Información", "Filtros y Visualizaciones", "Diagnóstico Completo 2023-T3", 
-         "Mapa Coroplético de Cobertura", "Calidad de la Conectividad", 
-         "Mapa Coroplético de Calidad"]
-    )
+# Menú lateral con íconos (emojis)
+st.sidebar.title("⚙ Menú")
+opcion = st.sidebar.radio(
+    "Selecciona una sección:",
+    [
+        "📄 Información", 
+        "🌍 Filtros globales de la Base de datos", 
+        "📊 Diagnóstico Completo 2023-T3", 
+        "🗺️ Mapa Coroplético de Cobertura", 
+        "📶 Calidad de la Conectividad", 
+        "🗺️ Mapa Coroplético de Calidad"
+    ]
+)
 
     # Redirigir a la sección seleccionada
-    if opcion == "Información":
+    if opcion == "📄 Información":
         st.header("Información del Dashboard")
         st.markdown("""
             ### Resumen del Dashboard
@@ -75,15 +80,15 @@ def main():
 
             Además, el proyecto dará lugar a un informe detallado con hallazgos clave y recomendaciones estratégicas para mejorar la infraestructura digital en el departamento. Con estos resultados, se pretende contribuir al desarrollo de iniciativas de alfabetización digital e inclusión tecnológica en comunidades con menor acceso, impulsando así una Antioquia más conectada, equitativa y competitiva en un entorno cada vez más digitalizado.
         """)
-    elif opcion == "Filtros globales de la Base de datos":
+    elif opcion == "🌍 Filtros globales de la Base de datos":
         page_filtros_visualizaciones(con)
-    elif opcion == "Diagnóstico Completo 2023-T3":
+    elif opcion == "📊 Diagnóstico Completo 2023-T3":
         page_analisis_fijo(con)
-    elif opcion == "Mapa Coroplético de Cobertura":
+    elif opcion == "🗺️ Mapa Coroplético de Cobertura":
         page_mapa_coropletico(con)
-    elif opcion == "Calidad de la Conectividad":
+    elif opcion == "📶 Calidad de la Conectividad":
         page_calidad_conectividad()
-    elif opcion == "Mapa Coroplético de Calidad":
+    elif opcion == "🗺️ Mapa Coroplético de Calidad":
         page_mapa_calidad_conectividad()
 
 if __name__ == "__main__":
