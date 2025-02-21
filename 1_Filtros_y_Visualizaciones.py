@@ -56,6 +56,9 @@ def page_filtros_visualizaciones(con):
         ).fetchdf()['DEPARTAMENTO'].tolist()
         departamento_seleccionado = st.multiselect("Selecciona los departamentos:", departamentos)
 
+    st.write(con.execute("SHOW TABLES").fetchdf())  # Para verificar que la tabla `data` existe
+    st.write(con.execute("DESCRIBE data").fetchdf())  # Para ver las columnas de la tabla
+
     # Filtro de tecnología
     tecnologias = ['COBERTURA_2G', 'COBERTURA_3G', 'COBERTURA_HSPA+', 'COBERTURA_4G', 'COBERTURA_LTE', 'COBERTURA_5G']
     tecnologia_seleccionada = st.selectbox("Selecciona la tecnología:", tecnologias)
