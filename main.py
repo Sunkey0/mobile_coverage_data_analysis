@@ -30,19 +30,19 @@ def main():
     # Conectar a DuckDB
     con = connect_to_duckdb(data)
 
-# Menú lateral con íconos (emojis)
-st.sidebar.title("⚙ Menú")
-opcion = st.sidebar.radio(
-    "Selecciona una sección:",
-    [
-        "📄 Información", 
-        "🌍 Filtros globales de la Base de datos", 
-        "📊 Diagnóstico Completo 2023-T3", 
-        "🗺️ Mapa Coroplético de Cobertura", 
-        "📶 Calidad de la Conectividad", 
-        "🗺️ Mapa Coroplético de Calidad"
-    ]
-)
+    # Menú lateral con íconos (emojis)
+    st.sidebar.title("⚙ Menú")
+    opcion = st.sidebar.radio(
+        "Selecciona una sección:",
+        [
+            "📄 Información", 
+            "🌍 Filtros globales de la Base de datos", 
+            "📊 Diagnóstico Completo 2023-T3", 
+            "🗺️ Mapa Coroplético de Cobertura", 
+            "📶 Calidad de la Conectividad", 
+            "🗺️ Mapa Coroplético de Calidad"
+        ]
+    )
 
     # Redirigir a la sección seleccionada
     if opcion == "📄 Información":
