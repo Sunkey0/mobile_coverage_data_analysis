@@ -1,3 +1,4 @@
+import streamlit as st
 import plotly.express as px
 
 def plot_cobertura(data, x_axis, y_axis, title, color_scale):
