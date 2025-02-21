@@ -21,14 +21,21 @@ def main():
     st.title("📊 Hacia una Antioquia Conectada")
 
     # Cargar datos
-    data = load_data()
-    
-    # Verificar si se cargaron los datos
-    if data is None:
-        st.stop()  # Detener la ejecución si no se subió un archivo
+    try:
+        data = load_data()
+        if data is None:
+            st.error("No se pudo cargar el archivo de datos. Por favor, sube un archivo válido.")
+            st.stop()  # Detener la ejecución si no se subió un archivo
+    except Exception as e:
+        st.error(f"Error al cargar los datos: {e}")
+        st.stop()
 
     # Conectar a DuckDB
-    con = connect_to_duckdb(data)
+    try:
+        con = connect_to_duckdb(data)
+    except Exception as e:
+        st.error(f"Error al conectar a DuckDB: {e}")
+        st.stop()
 
     # Menú lateral con íconos (emojis)
     st.sidebar.title("⚙ Menú")
