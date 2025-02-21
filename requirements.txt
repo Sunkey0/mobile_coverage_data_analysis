@@ -1,0 +1,12 @@
+streamlit
+numpy
+pandas
+matplotlib
+scipy
+seaborn
+plotly
+datetime
+duckdb
+folium
+streamlit_folium
+branca
