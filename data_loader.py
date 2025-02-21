@@ -1,5 +1,5 @@
-import pandas as pd
 import streamlit as st
+import pandas as pd
 
 def load_data():
     uploaded_file = st.sidebar.file_uploader("⬆️ Sube tu archivo CSV", type=["csv"])
