@@ -8,55 +8,52 @@ from pages.mapa_coropletico import page_mapa_coropletico
 from pages.calidad_conectividad import page_calidad_conectividad
 from pages.mapa_calidad_conectividad import page_mapa_calidad_conectividad
 
-# Configuración de la página
-st.set_page_config(
-    page_title="Hacia una Antioquia Conectada",
-    page_icon="📊",
-    layout="wide"
-)
+def main():
+    # Configuración inicial
+    setup_app()
 
-# Función para cargar los datos (almacenados en caché)
-@st.cache_data
-def cargar_datos(uploaded_file):
-    """
-    Carga los datos desde el archivo subido y los almacena en caché.
-    """
-    data = load_data(uploaded_file)
-    return data
-
-# Título de la página de inicio
-st.title("📊 Hacia una Antioquia Conectada")
-
-# Subir archivo CSV
-uploaded_file = st.sidebar.file_uploader("⬆️ Sube tu archivo CSV", type=["csv"])
-
-# Cargar datos si se ha subido un archivo
-if uploaded_file is not None:
-    # Cargar datos (almacenados en caché)
-    data = cargar_datos(uploaded_file)
-    
-    # Crear la conexión a DuckDB (no almacenada en caché)
+    # Cargar datos
+    data = load_data()
     con = connect_to_duckdb(data)
 
-    # Resumen del dashboard
-    st.markdown("""
-        ### Resumen del Dashboard
-        Este dashboard tiene como objetivo analizar la cobertura móvil en Antioquia 
-        durante el tercer trimestre de 2023. A continuación, se describen las secciones disponibles:
+    # Menú lateral
+    st.sidebar.title("Menú")
+    opcion = st.sidebar.radio(
+        "Selecciona una sección:",
+        ["Información", "Filtros y Visualizaciones", "Diagnóstico Completo 2023-T3", 
+         "Mapa Coroplético de Cobertura", "Calidad de la Conectividad", 
+         "Mapa Coroplético de Calidad"]
+    )
 
-        - **📊 Filtros y Visualizaciones**: Permite filtrar los datos por año, trimestre, 
-          departamento y tecnología, y visualizar gráficos de cobertura.
-        - **📈 Diagnóstico Completo 2023-T3**: Muestra un análisis detallado de la cobertura 
-          en Antioquia para el tercer trimestre de 2023.
-        - **🌍 Mapa Coroplético de Cobertura**: Visualiza la cobertura por municipio en un mapa.
-        - **📶 Calidad de la Conectividad**: Analiza la calidad de la conectividad por municipio.
-        - **🗺️ Mapa Coroplético de Calidad**: Muestra la calidad de la conectividad en un mapa.
+    # Redirigir a la sección seleccionada
+    if opcion == "Información":
+        st.header("Información del Dashboard")
+        st.markdown("""
+            ### Resumen del Dashboard
+            Este dashboard tiene como objetivo analizar la cobertura móvil en Antioquia 
+            durante el tercer trimestre de 2023. A continuación, se describen las secciones disponibles:
 
-        ### Fuente de Datos
-        Los datos utilizados en este dashboard provienen del archivo CSV subido.
-    """)
+            - **Filtros y Visualizaciones**: Permite filtrar los datos por año, trimestre, 
+              departamento y tecnología, y visualizar gráficos de cobertura.
+            - **Diagnóstico Completo 2023-T3**: Muestra un análisis detallado de la cobertura 
+              en Antioquia para el tercer trimestre de 2023.
+            - **Mapa Coroplético de Cobertura**: Visualiza la cobertura por municipio en un mapa.
+            - **Calidad de la Conectividad**: Analiza la calidad de la conectividad por municipio.
+            - **Mapa Coroplético de Calidad**: Muestra la calidad de la conectividad en un mapa.
 
-    # Mensaje en la barra lateral
-    st.sidebar.success("Selecciona una página arriba.")
-else:
-    st.warning("Por favor, sube un archivo CSV para continuar.")
+            ### Fuente de Datos
+            Los datos utilizados en este dashboard provienen de [nombre de la fuente].
+        """)
+    elif opcion == "Filtros y Visualizaciones":
+        page_filtros_visualizaciones(con)
+    elif opcion == "Diagnóstico Completo 2023-T3":
+        page_analisis_fijo(con)
+    elif opcion == "Mapa Coroplético de Cobertura":
+        page_mapa_coropletico(con)
+    elif opcion == "Calidad de la Conectividad":
+        page_calidad_conectividad()
+    elif opcion == "Mapa Coroplético de Calidad":
+        page_mapa_calidad_conectividad()
+
+if __name__ == "__main__":
+    main()
