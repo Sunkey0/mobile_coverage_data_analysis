@@ -108,18 +108,21 @@ def page_filtros_visualizaciones(con):
     
     # Filtros específicos para la base de datos de penetración de internet fijo
     st.markdown("### Filtros para Penetración de Internet Fijo")
-    
-    # Seleccionar año
-    años_disponibles = internet_fijo['AÑO'].unique().tolist()
-    año_seleccionado_fijo = st.selectbox("Selecciona el año para penetración de internet fijo:", años_disponibles)
-    
-    # Seleccionar trimestre
-    trimestres_disponibles = internet_fijo[internet_fijo['AÑO'] == año_seleccionado_fijo]['TRIMESTRE'].unique().tolist()
-    trimestre_seleccionado_fijo = st.selectbox("Selecciona el trimestre para penetración de internet fijo:", trimestres_disponibles)
-    
-    # Seleccionar departamentos
-    departamentos_disponibles = internet_fijo['DEPARTAMENTO'].unique().tolist()
-    departamento_seleccionado_fijo = st.multiselect("Selecciona los departamentos para penetración de internet fijo:", departamentos_disponibles)
+
+    # Mostrar KPIs
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        # Seleccionar año
+        años_disponibles = internet_fijo['AÑO'].unique().tolist()
+        año_seleccionado_fijo = st.selectbox("Selecciona el año para penetración de internet fijo:", años_disponibles)
+    with col2:
+        # Seleccionar trimestre
+        trimestres_disponibles = internet_fijo[internet_fijo['AÑO'] == año_seleccionado_fijo]['TRIMESTRE'].unique().tolist()
+        trimestre_seleccionado_fijo = st.selectbox("Selecciona el trimestre para penetración de internet fijo:", trimestres_disponibles)
+    with col3:
+        # Seleccionar departamentos
+        departamentos_disponibles = internet_fijo['DEPARTAMENTO'].unique().tolist()
+        departamento_seleccionado_fijo = st.multiselect("Selecciona los departamentos para penetración de internet fijo:", departamentos_disponibles)
     
     # Filtrar los datos de penetración de internet fijo
     if departamento_seleccionado_fijo:
