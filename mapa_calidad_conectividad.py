@@ -152,3 +152,6 @@ def page_mapa_calidad_conectividad():
         
     else:
         st.warning("Por favor, sube un archivo GeoJSON para continuar.")
+
+# Ejecutar la función principal
+page_mapa_calidad_conectividad()
