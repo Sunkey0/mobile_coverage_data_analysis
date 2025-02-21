@@ -105,6 +105,9 @@ def page_filtros_visualizaciones(con):
 
     # KPIs de Penetración de Internet Fijo
     st.subheader("📈 KPIs de Penetración de Internet Fijo")
+
+    st.write("Columnas disponibles en los datos de penetración de internet fijo:")
+    st.write(internet_fijo.columns.tolist())
     
     # Filtros específicos para la base de datos de penetración de internet fijo
     st.markdown("### Filtros para Penetración de Internet Fijo")
