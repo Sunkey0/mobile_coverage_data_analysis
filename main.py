@@ -15,7 +15,19 @@ st.set_page_config(
     layout="wide"
 )
 
-# Título de la página
+# Función para cargar los datos (almacenados en caché)
+@st.cache_data
+def cargar_datos():
+    # Cargar datos desde el repositorio de GitHub
+    data = load_data()
+    # Conectar a DuckDB
+    con = connect_to_duckdb(data)
+    return data, con
+
+# Cargar datos una sola vez
+data, con = cargar_datos()
+
+# Título de la página de inicio
 st.title("📊 Hacia una Antioquia Conectada")
 
 # Resumen del dashboard
