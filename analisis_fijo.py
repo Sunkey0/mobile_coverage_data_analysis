@@ -392,3 +392,53 @@ def page_analisis_fijo(con):
             st.dataframe(top_menor.style.format({'cobertura': '{:.1f}%'}))
         else:
             st.warning("No hay datos para el ranking")
+    st.subheader("🏆 Top 5 Municipios con Mayor Presencia de COMCEL (Porcentaje de Cobertura)")
+
+    # Calcular el total de centros poblados por municipio
+    query_total_centros = """
+        SELECT 
+            MUNICIPIO,
+            COUNT(*) AS total_centros_poblados
+        FROM data
+        WHERE DEPARTAMENTO = 'ANTIOQUIA' AND AÑO = '2023' AND TRIMESTRE = '3'
+        GROUP BY MUNICIPIO
+    """
+    total_centros_municipio = con.execute(query_total_centros).fetchdf()
+    
+    # Filtrar los datos para COMCEL
+    query_comcel = """
+        SELECT 
+            MUNICIPIO,
+            COUNT(*) AS centros_cubiertos
+        FROM data
+        WHERE DEPARTAMENTO = 'ANTIOQUIA' AND AÑO = '2023' AND TRIMESTRE = '3' AND PROVEEDOR = 'COMUNICACIÓN CELULAR S.A. COMCEL S.A.'
+        GROUP BY MUNICIPIO
+    """
+    comcel_cobertura = con.execute(query_comcel).fetchdf()
+    
+    # Combinar los datos de cobertura de COMCEL con el total de centros poblados
+    comcel_porcentaje = pd.merge(comcel_cobertura, total_centros_municipio, on='MUNICIPIO', how='left')
+    
+    # Calcular el porcentaje de cobertura
+    comcel_porcentaje['porcentaje_cobertura'] = (comcel_porcentaje['centros_cubiertos'] / comcel_porcentaje['total_centros_poblados']) * 100
+    
+    # Ordenar por porcentaje de cobertura y obtener el Top 5
+    top_5_comcel = comcel_porcentaje.sort_values(by='porcentaje_cobertura', ascending=False).head(5)
+    
+    # Mostrar el Top 5 en un DataFrame
+    st.dataframe(top_5_comcel[['MUNICIPIO', 'porcentaje_cobertura']].style.format({'porcentaje_cobertura': '{:.1f}%'}))
+    
+    # Gráfico de barras para el Top 5
+    if not top_5_comcel.empty:
+        fig_top_5_comcel = px.bar(
+            top_5_comcel,
+            x='MUNICIPIO',
+            y='porcentaje_cobertura',
+            title="Top 5 Municipios con Mayor Presencia de COMCEL (Porcentaje de Cobertura)",
+            labels={'porcentaje_cobertura': 'Porcentaje de Cobertura (%)', 'MUNICIPIO': 'Municipio'},
+            color='porcentaje_cobertura',
+            color_continuous_scale=px.colors.sequential.Viridis
+        )
+        st.plotly_chart(fig_top_5_comcel, use_container_width=True)
+    else:
+        st.warning("No hay datos disponibles para el Top 5 de municipios con presencia de COMCEL.")
