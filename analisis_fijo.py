@@ -412,7 +412,7 @@ def page_analisis_fijo(con):
             MUNICIPIO,
             COUNT(*) AS centros_cubiertos
         FROM data
-        WHERE DEPARTAMENTO = 'ANTIOQUIA' AND AÑO = '2023' AND TRIMESTRE = '3' AND PROVEEDOR = 'COMUNICACIÓN CELULAR S.A. COMCEL S.A.'
+        WHERE DEPARTAMENTO = 'ANTIOQUIA' AND AÑO = '2023' AND TRIMESTRE = '3' AND PROVEEDOR = 'COMUNICACION CELULAR S A COMCEL S A'
         GROUP BY MUNICIPIO
     """
     comcel_cobertura = con.execute(query_comcel).fetchdf()
