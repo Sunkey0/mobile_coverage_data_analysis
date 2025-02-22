@@ -101,39 +101,39 @@ def page_filtros_visualizaciones(con):
         )
         st.plotly_chart(fig_departamento, use_container_width=True)
 
-    # KPI: Porcentaje de cobertura por departamento
-    st.subheader("📊 Porcentaje de Cobertura por Departamento")
-
-    # Calcular el total de centros poblados por departamento
-    total_centros_poblados = data_filtrada.groupby('DEPARTAMENTO').size().reset_index(name='Total_Centros_Poblados')
-
-    # Calcular el porcentaje de cobertura por departamento
-    porcentaje_cobertura = pd.merge(cobertura_departamento, total_centros_poblados, on='DEPARTAMENTO')
-    porcentaje_cobertura['Porcentaje_Cobertura'] = (porcentaje_cobertura['Conteo'] / porcentaje_cobertura['Total_Centros_Poblados']) * 100
-
-    # Mostrar el DataFrame de porcentajes y el total de centros poblados en columnas
-    col1, col2 = st.columns([2, 1])  # Dividir el espacio en dos columnas
-
-    with col1:
-        # Mostrar el DataFrame de porcentajes
-        st.dataframe(porcentaje_cobertura[['DEPARTAMENTO', 'Porcentaje_Cobertura']])
-
-    with col2:
-        # Mostrar el número total de centros poblados en una ficha
-        total_centros = total_centros_poblados['Total_Centros_Poblados'].sum()
-        st.metric("Total de Centros Poblados", f"{total_centros:,}")
-
-    # Gráfico de porcentaje de cobertura por departamento
-    fig_porcentaje = px.bar(
-        porcentaje_cobertura,
-        x='DEPARTAMENTO',
-        y='Porcentaje_Cobertura',
-        title=f"Porcentaje de Cobertura {tecnologia_seleccionada} por Departamento",
-        labels={'Porcentaje_Cobertura': 'Porcentaje de Cobertura', 'DEPARTAMENTO': 'Departamento'},
-        color='Porcentaje_Cobertura',
-        color_continuous_scale=px.colors.sequential.Inferno
-    )
-    st.plotly_chart(fig_porcentaje, use_container_width=True)
+        # KPI: Porcentaje de cobertura por departamento
+        st.subheader("📊 Porcentaje de Cobertura por Departamento")
+    
+        # Calcular el total de centros poblados por departamento
+        total_centros_poblados = data_filtrada.groupby('DEPARTAMENTO').size().reset_index(name='Total_Centros_Poblados')
+    
+        # Calcular el porcentaje de cobertura por departamento
+        porcentaje_cobertura = pd.merge(cobertura_departamento, total_centros_poblados, on='DEPARTAMENTO')
+        porcentaje_cobertura['Porcentaje_Cobertura'] = (porcentaje_cobertura['Conteo'] / porcentaje_cobertura['Total_Centros_Poblados']) * 100
+    
+        # Mostrar el DataFrame de porcentajes y el total de centros poblados en columnas
+        col1, col2 = st.columns([2, 1])  # Dividir el espacio en dos columnas
+    
+        with col1:
+            # Mostrar el DataFrame de porcentajes
+            st.dataframe(porcentaje_cobertura[['DEPARTAMENTO', 'Porcentaje_Cobertura']])
+    
+        with col2:
+            # Mostrar el número total de centros poblados en una ficha
+            total_centros = total_centros_poblados['Total_Centros_Poblados'].sum()
+            st.metric("Total de Centros Poblados", f"{total_centros:,}")
+    
+        # Gráfico de porcentaje de cobertura por departamento
+        fig_porcentaje = px.bar(
+            porcentaje_cobertura,
+            x='DEPARTAMENTO',
+            y='Porcentaje_Cobertura',
+            title=f"Porcentaje de Cobertura {tecnologia_seleccionada} por Departamento",
+            labels={'Porcentaje_Cobertura': 'Porcentaje de Cobertura', 'DEPARTAMENTO': 'Departamento'},
+            color='Porcentaje_Cobertura',
+            color_continuous_scale=px.colors.sequential.Inferno
+        )
+        st.plotly_chart(fig_porcentaje, use_container_width=True)
     else:
         st.warning("No hay datos disponibles para los filtros seleccionados.")
 
