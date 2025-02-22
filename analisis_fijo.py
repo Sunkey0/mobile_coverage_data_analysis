@@ -158,10 +158,7 @@ def page_analisis_fijo(con):
 
             if not top5_municipios.empty:
                 st.write(f"#### Top 5 Municipios con Mayor Presencia de {proveedor_mayor_cobertura}")
-               st.dataframe(
-                top_5_comcel[['MUNICIPIO', 'porcentaje_cobertura', 'total_centros_poblados']]
-                .style.format({'porcentaje_cobertura': '{:.1f}%', 'total_centros_poblados': '{:,}'})
-            )
+                st.dataframe(top5_municipios)
             else:
                 st.warning(f"No hay datos disponibles para el Top 5 de municipios de {proveedor_mayor_cobertura}.")
 
