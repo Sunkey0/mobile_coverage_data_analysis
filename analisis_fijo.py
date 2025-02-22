@@ -143,42 +143,21 @@ def page_analisis_fijo(con):
 
     with col2:
         if not datos_proveedores.empty:
-                # Top 5 Municipios con Mayor Presencia de COMCEL (Porcentaje de Cobertura)
-                st.subheader("🏆 Top 5 Municipios con Mayor Presencia de COMCEL (Porcentaje de Cobertura)")
-                
-                # Calcular el total de centros poblados por municipio
-                query_total_centros = """
-                    SELECT 
-                        MUNICIPIO,
-                        COUNT(*) AS total_centros_poblados
-                    FROM data
-                    WHERE DEPARTAMENTO = 'ANTIOQUIA' AND AÑO = '2023' AND TRIMESTRE = '3'
-                    GROUP BY MUNICIPIO
-                """
-                total_centros_municipio = con.execute(query_total_centros).fetchdf()
-                
-                # Filtrar los datos para COMCEL
-                query_comcel = """
-                    SELECT 
-                        MUNICIPIO,
-                        COUNT(*) AS centros_cubiertos
-                    FROM data
-                    WHERE DEPARTAMENTO = 'ANTIOQUIA' AND AÑO = '2023' AND TRIMESTRE = '3' AND PROVEEDOR = 'COMUNICACIÓN CELULAR S.A. COMCEL S.A.'
-                    GROUP BY MUNICIPIO
-                """
-                comcel_cobertura = con.execute(query_comcel).fetchdf()
-                
-                # Combinar los datos de cobertura de COMCEL con el total de centros poblados
-                comcel_porcentaje = pd.merge(comcel_cobertura, total_centros_municipio, on='MUNICIPIO', how='left')
-                
-                # Calcular el porcentaje de cobertura
-                comcel_porcentaje['porcentaje_cobertura'] = (comcel_porcentaje['centros_cubiertos'] / comcel_porcentaje['total_centros_poblados']) * 100
-                
-                # Ordenar por porcentaje de cobertura y obtener el Top 5
-                top_5_comcel = comcel_porcentaje.sort_values(by='porcentaje_cobertura', ascending=False).head(5)
-                
-                # Mostrar el Top 5 en un DataFrame
-                st.dataframe(top_5_comcel[['MUNICIPIO', 'porcentaje_cobertura']].style.format({'porcentaje_cobertura': '{:.1f}%'}))
+            query_top5_municipios = f"""
+                SELECT 
+                    MUNICIPIO,
+                    COUNT(CASE WHEN {tecnologia_seleccionada_p3} = 'S' THEN 1 END) AS cobertura
+                FROM data
+                WHERE DEPARTAMENTO = 'ANTIOQUIA' AND AÑO = '2023' AND TRIMESTRE = '3' AND PROVEEDOR = '{proveedor_mayor_cobertura}'
+                GROUP BY MUNICIPIO
+                ORDER BY cobertura DESC
+                LIMIT 5
+            """
+            top5_municipios = con.execute(query_top5_municipios).fetchdf()
+
+            if not top5_municipios.empty:
+                st.write(f"#### Top 5 Municipios con Mayor Presencia de {proveedor_mayor_cobertura}")
+                st.dataframe(top5_municipios)
             else:
                 st.warning(f"No hay datos disponibles para el Top 5 de municipios de {proveedor_mayor_cobertura}.")
 
