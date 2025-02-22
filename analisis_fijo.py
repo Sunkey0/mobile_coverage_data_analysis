@@ -1,5 +1,6 @@
 import streamlit as st
 import plotly.express as px
+import pandas as pd
 
 def page_analisis_fijo(con):
     st.header("Análisis Fijo y Avanzado (2023, Trimestre 3, Antioquia)")
